@@ -1,15 +1,33 @@
 import React, { Component } from "react";
 import css from "./css/Content.module.css";
-import { savedPosts } from "../posts.json";
+import posts from "../posts.json";
 import PostItem from "./PostItem";
+import Loader from "./Loader";
 
 export class Content extends Component {
   constructor(props) {
     super(props);
-    console.log(savedPosts);
+    this.state = {
+      savedPosts: posts.savedPosts,
+      isLoaded: false,
+    };
+  }
+
+  getData() {
+    setTimeout(() => {
+      this.setState({
+        isLoaded: true,
+      });
+    }, 2000);
+  }
+
+  componentDidMount() {
+    this.getData();
   }
 
   render() {
+    const { savedPosts } = this.state;
+
     return (
       <div className={css.Content}>
         <div className={css.TitleBar}>
@@ -19,7 +37,7 @@ export class Content extends Component {
         <div className={css.SearchResults}>
           {/* Part 1: Creating the map function */}
 
-          {savedPosts.map((post) => {
+          {/* {savedPosts.map((post) => {
             return (
               <div className={css.SearchItem} key={post.title}>
                 <p>{post.title}</p>
@@ -28,11 +46,11 @@ export class Content extends Component {
                 <p>{post.description}</p>
               </div>
             );
-          })}
+          })} */}
 
           {/* Part 2: Creating a child component */}
-
-          {/* <PostItem savedPosts={savedPosts} /> */}
+          {!this.state.isLoaded && <Loader />}
+          {this.state.isLoaded && <PostItem savedPosts={savedPosts} />}
         </div>
       </div>
     );
