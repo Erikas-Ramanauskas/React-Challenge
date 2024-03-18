@@ -8,8 +8,10 @@ export class Content extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      searchText: "",
       savedPosts: posts.savedPosts,
       isLoaded: false,
+      posts: [],
     };
   }
 
@@ -23,7 +25,19 @@ export class Content extends Component {
 
   componentDidMount() {
     this.getData();
+    this.setState({
+      posts: posts.savedPosts,
+    });
   }
+
+  handleSearchChange = (event) => {
+    const value = event.target.value;
+    const foundPosts = posts.savedPosts.filter((post) => post.name.toLowerCase().includes(value.toLowerCase()));
+    this.setState({
+      searchText: value,
+      savedPosts: foundPosts,
+    });
+  };
 
   render() {
     const { savedPosts } = this.state;
@@ -31,7 +45,17 @@ export class Content extends Component {
     return (
       <div className={css.Content}>
         <div className={css.TitleBar}>
-          <h1>My Photos</h1>
+          <form>
+            <label htmlFor="searchInput">Search:</label>
+            <input
+              type="text"
+              id="searchInput"
+              value={this.state.searchText}
+              onChange={this.handleSearchChange}
+              placeholder="By Author"
+            />
+          </form>
+          <p>posts found: {this.state.savedPosts.length}</p>
         </div>
 
         <div className={css.SearchResults}>
